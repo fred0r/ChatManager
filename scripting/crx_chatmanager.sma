@@ -14,7 +14,7 @@
 	#error Your "cromchat.inc" is outdated. Please replace it with the one attached in the archive.
 #endif
 
-new const PLUGIN_VERSION[] = "4.8"
+new const PLUGIN_VERSION[] = "4.8.1"
 const Float:DELAY_ON_REGISTER = 1.0
 const Float:DELAY_ON_CONNECT = 1.0
 const Float:DELAY_ON_CHANGE = 0.1
