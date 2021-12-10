@@ -571,8 +571,14 @@ ReadFile()
 							}
 							else if(equal(szKey, "CHAT_LOG_FILE"))
 							{
-								copy(g_eSettings[CHAT_LOG_FILE], charsmax(g_eSettings[CHAT_LOG_FILE]), szValue)
-								format_time(g_eSettings[CHAT_LOG_FILE], charsmax(g_eSettings[CHAT_LOG_FILE]), g_eSettings[CHAT_LOG_FILE])
+								if(szValue[0])
+								{
+									new szLogsDir[MAX_RESOURCE_PATH_LENGTH]
+									get_localinfo("amxx_logs", szLogsDir, charsmax(szLogsDir))
+
+									formatex(g_eSettings[CHAT_LOG_FILE], charsmax(g_eSettings[CHAT_LOG_FILE]), "%s/%s", szLogsDir, szValue)
+									format_time(g_eSettings[CHAT_LOG_FILE], charsmax(g_eSettings[CHAT_LOG_FILE]), g_eSettings[CHAT_LOG_FILE])
+								}
 							}
 							else if(equal(szKey, "CHAT_LOG_SAY_FORMAT"))
 							{
