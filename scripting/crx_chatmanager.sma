@@ -2,6 +2,7 @@
 #include <amxmisc>
 #include <cstrike>
 #include <fakemeta>
+#include <reapi>
 
 #tryinclude <cromchat>
 
@@ -585,12 +586,12 @@ ReadFile()
 							}
 							else if(equal(szKey, "SAY_SOUND") && !g_bFileWasRead)
 							{
-								precache_generic(szValue)
+								precache_sound(szValue)
 								copy(g_eSettings[SAY_SOUND], charsmax(g_eSettings[SAY_SOUND]), szValue)
 							}
 							else if(equal(szKey, "SAY_TEAM_SOUND") && !g_bFileWasRead)
 							{
-								precache_generic(szValue)
+								precache_sound(szValue)
 								copy(g_eSettings[SAY_TEAM_SOUND], charsmax(g_eSettings[SAY_TEAM_SOUND]), szValue)
 							}
 							else if(equal(szKey, "EXPIRATION_DATE_FORMAT"))
@@ -931,7 +932,7 @@ send_chat_message(iIdTo, iIdFrom, const szMessage[], const szSound[])
 
 	if(szSound[0])
 	{
-		client_cmd(iIdTo, "spk ^"%s^"", szSound)
+		rg_send_audio2(iIdTo, szSound)
 	}
 }
 
@@ -1555,4 +1556,22 @@ public _cm_total_say_formats(iPlugin, iParams)
 public _cm_update_player_data(iPlugin, iParams)
 {
 	UpdateData(get_param(1))
+}
+
+stock rg_send_audio2(const iPlayer, const szAudio[])
+{
+	if(!iPlayer)
+	{
+		for(new i = 1; i <= MaxClients; i++)
+		{
+			if(!is_user_connected(i) || is_user_hltv(i) || is_user_bot(i))
+				continue;
+
+			rh_emit_sound2(i, i, CHAN_STATIC, szAudio);
+		}
+	}
+	else
+	{
+		rh_emit_sound2(iPlayer, iPlayer, CHAN_STATIC, szAudio);
+	}
 }
