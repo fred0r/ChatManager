@@ -53,11 +53,11 @@
 
 #define CromChat CC_SendMessage
 
-const Float:CC_VERSION            = 3.3
+const Float:CC_VERSION            = 3.4
 const CC_MAX_ACT_PREFIX_SIZE      = 10
 const CC_MAX_PLAYERS              = 32
 const CC_MAX_PREFIX_SIZE          = 64
-const CC_MAX_MESSAGE_SIZE         = 177
+const CC_MAX_MESSAGE_SIZE         = 188
 new const CC_LIBRARY_NAME[]       = "cromchat"
 static const CC_FILTERING_FLAGS[] = "ch"
 
@@ -889,7 +889,8 @@ stock _CC_WriteMessage(id, const message[])
 		}
 	}
 
-	static const CC_PLAYER_ITEM_PHRASE[] = "#Spec_PlayerItem" // Credits to WPMGPRoSToTeMa
+	// static const CC_PLAYER_ITEM_PHRASE[] = "#Spec_PlayerItem" // Credits to WPMGPRoSToTeMa
+	static const CC_PLAYER_ITEM_PHRASE[] = "%s"
 
 	message_begin(MSG_ONE, CC_MSG_SAYTEXT, _, id)
 
