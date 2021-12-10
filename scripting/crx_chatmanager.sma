@@ -1228,7 +1228,7 @@ bool:meets_requirements(const id, const iInfoType, const szInfo[])
 		}
 		case INFOTYPE_NAME:
 		{
-			if(equali(g_ePlayerData[id][PDATA_NAME], szInfo))
+			if(equal(g_ePlayerData[id][PDATA_NAME], szInfo))
 			{
 				return true
 			}
