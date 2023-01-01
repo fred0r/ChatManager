@@ -872,7 +872,7 @@ Handle_Message(id, szArgs[CC_MAX_MESSAGE_SIZE], bool:bTeam)
 	apply_replacements(g_ePlayerData[id][bTeam ? PDATA_SAY_TEAM_FORMAT : PDATA_SAY_FORMAT], id, iAlive, iTeam, szArgs, szMessage, charsmax(szMessage))
 
 	new iPnum
-	get_players(iPlayers, iPnum, "ch")
+	get_players(iPlayers, iPnum, "c")
 
 	if(g_eSettings[ALL_CHAT] == ALLCHAT_SEE_TEAM || (g_ePlayerData[id][PDATA_GLOBAL_CHAT] && !(bTeam && !g_eSettings[GLOBAL_CHAT_TEAM])))
 	{
