@@ -2,6 +2,7 @@
 #include <amxmisc>
 #include <cstrike>
 #include <fakemeta>
+#include <reapi>
 
 #tryinclude <cromchat>
 
@@ -13,7 +14,7 @@
 	#error Your "cromchat.inc" is outdated. Please replace it with the one attached in the archive.
 #endif
 
-new const PLUGIN_VERSION[] = "4.8"
+new const PLUGIN_VERSION[] = "4.8.1"
 const Float:DELAY_ON_REGISTER = 1.0
 const Float:DELAY_ON_CONNECT = 1.0
 const Float:DELAY_ON_CHANGE = 0.1
@@ -570,8 +571,14 @@ ReadFile()
 							}
 							else if(equal(szKey, "CHAT_LOG_FILE"))
 							{
-								copy(g_eSettings[CHAT_LOG_FILE], charsmax(g_eSettings[CHAT_LOG_FILE]), szValue)
-								format_time(g_eSettings[CHAT_LOG_FILE], charsmax(g_eSettings[CHAT_LOG_FILE]), g_eSettings[CHAT_LOG_FILE])
+								if(szValue[0])
+								{
+									new szLogsDir[MAX_RESOURCE_PATH_LENGTH]
+									get_localinfo("amxx_logs", szLogsDir, charsmax(szLogsDir))
+
+									formatex(g_eSettings[CHAT_LOG_FILE], charsmax(g_eSettings[CHAT_LOG_FILE]), "%s/%s", szLogsDir, szValue)
+									format_time(g_eSettings[CHAT_LOG_FILE], charsmax(g_eSettings[CHAT_LOG_FILE]), g_eSettings[CHAT_LOG_FILE])
+								}
 							}
 							else if(equal(szKey, "CHAT_LOG_SAY_FORMAT"))
 							{
@@ -585,12 +592,12 @@ ReadFile()
 							}
 							else if(equal(szKey, "SAY_SOUND") && !g_bFileWasRead)
 							{
-								precache_generic(szValue)
+								precache_sound(szValue)
 								copy(g_eSettings[SAY_SOUND], charsmax(g_eSettings[SAY_SOUND]), szValue)
 							}
 							else if(equal(szKey, "SAY_TEAM_SOUND") && !g_bFileWasRead)
 							{
-								precache_generic(szValue)
+								precache_sound(szValue)
 								copy(g_eSettings[SAY_TEAM_SOUND], charsmax(g_eSettings[SAY_TEAM_SOUND]), szValue)
 							}
 							else if(equal(szKey, "EXPIRATION_DATE_FORMAT"))
@@ -931,7 +938,7 @@ send_chat_message(iIdTo, iIdFrom, const szMessage[], const szSound[])
 
 	if(szSound[0])
 	{
-		client_cmd(iIdTo, "spk ^"%s^"", szSound)
+		rg_send_audio2(iIdTo, szSound)
 	}
 }
 
@@ -1227,7 +1234,7 @@ bool:meets_requirements(const id, const iInfoType, const szInfo[])
 		}
 		case INFOTYPE_NAME:
 		{
-			if(equali(g_ePlayerData[id][PDATA_NAME], szInfo))
+			if(equal(g_ePlayerData[id][PDATA_NAME], szInfo))
 			{
 				return true
 			}
@@ -1555,4 +1562,22 @@ public _cm_total_say_formats(iPlugin, iParams)
 public _cm_update_player_data(iPlugin, iParams)
 {
 	UpdateData(get_param(1))
+}
+
+stock rg_send_audio2(const iPlayer, const szAudio[])
+{
+	if(!iPlayer)
+	{
+		for(new i = 1; i <= MaxClients; i++)
+		{
+			if(!is_user_connected(i) || is_user_hltv(i) || is_user_bot(i))
+				continue;
+
+			rh_emit_sound2(i, i, CHAN_STATIC, szAudio);
+		}
+	}
+	else
+	{
+		rh_emit_sound2(iPlayer, iPlayer, CHAN_STATIC, szAudio);
+	}
 }
